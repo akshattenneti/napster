@@ -2052,4 +2052,266 @@
         const modal = document.createElement('div');
         modal.classList.add('modal-overlay');
         modal.innerHTML = `
-          <div class="modal
+<div class="modal-content animate-fadeIn">
+            <div class="modal-header">
+              <div class="modal-title">Legal Concept</div>
+              <button class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+              ${tooltipContent}
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        modal.querySelector('.modal-close').addEventListener('click', () => {
+          document.body.removeChild(modal);
+        });
+        
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            document.body.removeChild(modal);
+          }
+        });
+      });
+    });
+    
+    // Audio Player Controls
+    const audioPlayer = document.getElementById('audio-player');
+    const audioShowToggle = document.getElementById('audio-show-toggle');
+    const audioToggle = document.getElementById('audio-toggle');
+    const audioElement = document.getElementById('background-music');
+    const audioToggleIcon = audioToggle.querySelector('i');
+    const audioProgressBar = document.querySelector('.audio-progress-bar');
+    const audioProgressHandle = document.querySelector('.audio-progress-handle');
+    const audioTimeDisplay = document.querySelector('.audio-time');
+    
+    // Auto-play music when page loads
+    window.addEventListener('load', () => {
+      // Try to play - browsers may block this without user interaction
+      audioElement.play().catch(e => {
+        console.log("Auto-play prevented by browser. User interaction required.");
+        // Show the player toggle since auto-play failed
+        audioPlayer.classList.remove('minimized');
+      });
+      
+      // Update progress bar as audio plays
+      audioElement.addEventListener('timeupdate', updateProgress);
+    });
+    
+    // Update progress bar
+    function updateProgress() {
+      const duration = audioElement.duration;
+      const currentTime = audioElement.currentTime;
+      const progressPercent = (currentTime / duration) * 100;
+      
+      audioProgressBar.style.width = `${progressPercent}%`;
+      audioProgressHandle.style.left = `${progressPercent}%`;
+      
+      // Update time display
+      const minutes = Math.floor(currentTime / 60);
+      const seconds = Math.floor(currentTime % 60).toString().padStart(2, '0');
+      const totalMinutes = Math.floor(duration / 60);
+      const totalSeconds = Math.floor(duration % 60).toString().padStart(2, '0');
+      
+      audioTimeDisplay.textContent = `${minutes}:${seconds} / ${totalMinutes}:${totalSeconds}`;
+    }
+    
+    // Toggle audio show/hide
+    audioShowToggle.addEventListener('click', () => {
+      audioPlayer.classList.toggle('minimized');
+      
+      if (audioPlayer.classList.contains('minimized')) {
+        audioShowToggle.querySelector('i').classList.remove('fa-times');
+        audioShowToggle.querySelector('i').classList.add('fa-music');
+      } else {
+        audioShowToggle.querySelector('i').classList.remove('fa-music');
+        audioShowToggle.querySelector('i').classList.add('fa-times');
+      }
+    });
+    
+    // Play/pause toggle
+    audioToggle.addEventListener('click', () => {
+      if (audioElement.paused) {
+        audioElement.play();
+        audioToggleIcon.classList.remove('fa-play');
+        audioToggleIcon.classList.add('fa-pause');
+      } else {
+        audioElement.pause();
+        audioToggleIcon.classList.remove('fa-pause');
+        audioToggleIcon.classList.add('fa-play');
+      }
+    });
+    
+    // Allow seeking through the track by clicking on progress bar
+    document.querySelector('.audio-progress').addEventListener('click', (e) => {
+      const progressBar = e.currentTarget;
+      const clickPositionInBar = e.offsetX;
+      const barWidth = progressBar.clientWidth;
+      const percentageClicked = (clickPositionInBar / barWidth);
+      
+      if (audioElement.duration) {
+        audioElement.currentTime = audioElement.duration * percentageClicked;
+      }
+    });
+    
+    // Windows 98/2000 style window controls
+    document.querySelectorAll('.win2k-window-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const windowContent = button.closest('.win2k-window').querySelector('.win2k-window-content');
+        if (windowContent.style.display === 'none') {
+          windowContent.style.display = 'block';
+        } else {
+          windowContent.style.display = 'none';
+        }
+      });
+    });
+    
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('i');
+    let darkMode = false;
+    
+    themeToggle.addEventListener('click', () => {
+      darkMode = !darkMode;
+      
+      if (darkMode) {
+        document.documentElement.style.setProperty('--napster-dark-blue', '#000000');
+        document.documentElement.style.setProperty('--napster-medium-blue', '#121212');
+        document.documentElement.style.setProperty('--napster-light-blue', '#333333');
+        document.documentElement.style.setProperty('--napster-highlight', '#1DB954');
+        document.documentElement.style.setProperty('--napster-green', '#1ED760');
+        document.documentElement.style.setProperty('--napster-panel', '#1e1e1e');
+        document.documentElement.style.setProperty('--napster-active', '#333333');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+      } else {
+        document.documentElement.style.setProperty('--napster-dark-blue', '#0f1e35');
+        document.documentElement.style.setProperty('--napster-medium-blue', '#152848');
+        document.documentElement.style.setProperty('--napster-light-blue', '#4b6eaf');
+        document.documentElement.style.setProperty('--napster-highlight', '#4bd3ff');
+        document.documentElement.style.setProperty('--napster-green', '#5fd38d');
+        document.documentElement.style.setProperty('--napster-panel', '#1c2a45');
+        document.documentElement.style.setProperty('--napster-active', '#2a508c');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+      }
+    });
+    
+    // Napster search bar focus effect
+    const searchInput = document.querySelector('.napster-search input');
+    searchInput.addEventListener('focus', () => {
+      searchInput.parentElement.style.boxShadow = '0 0 0 2px var(--napster-light-blue)';
+    });
+    
+    searchInput.addEventListener('blur', () => {
+      searchInput.parentElement.style.boxShadow = 'none';
+    });
+    
+    // Show animation when elements come into viewport
+    const animateOnScroll = () => {
+      const elements = document.querySelectorAll('.section-card');
+      
+      elements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        
+        if (elementPosition < windowHeight - 100) {
+          if (!element.classList.contains('animate-fadeIn')) {
+            element.classList.add('animate-fadeIn');
+          }
+        }
+      });
+    };
+    
+    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('load', animateOnScroll);
+    
+    // Draggable window effect for Windows 98/2000 style
+    const windowHeaders = document.querySelectorAll('.win2k-window-header');
+    
+    windowHeaders.forEach(header => {
+      let isDragging = false;
+      let offsetX, offsetY;
+      
+      header.addEventListener('mousedown', (e) => {
+        if (e.target.classList.contains('win2k-window-button')) return;
+        
+        isDragging = true;
+        const window = header.closest('.win2k-window');
+        
+        // Calculate the offset of the mouse pointer relative to the window
+        const windowRect = window.getBoundingClientRect();
+        offsetX = e.clientX - windowRect.left;
+        offsetY = e.clientY - windowRect.top;
+        
+        // Bring window to front
+        window.style.zIndex = '1000';
+        
+        // Add a shadow to indicate active window
+        window.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+      });
+      
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        const window = header.closest('.win2k-window');
+        
+        // Calculate new position
+        const x = e.clientX - offsetX;
+        const y = e.clientY - offsetY;
+        
+        // Set the window position
+        window.style.position = 'absolute';
+        window.style.left = `${x}px`;
+        window.style.top = `${y}px`;
+      });
+      
+      document.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        
+        // Reset the shadow
+        header.closest('.win2k-window').style.boxShadow = '2px 2px 5px var(--napster-shadow)';
+      });
+    });
+    
+    // "Napster Running" notification - simulates the old Napster system messages
+    setTimeout(() => {
+      const notification = document.createElement('div');
+      notification.style.position = 'fixed';
+      notification.style.bottom = '100px';
+      notification.style.right = '20px';
+      notification.style.backgroundColor = 'var(--napster-panel)';
+      notification.style.border = '1px solid var(--napster-border)';
+      notification.style.borderRadius = '3px';
+      notification.style.padding = '10px';
+      notification.style.boxShadow = '0 2px 5px rgba(0,0,0,0.3)';
+      notification.style.zIndex = '1000';
+      notification.style.maxWidth = '250px';
+      notification.style.color = 'var(--text-main)';
+      notification.style.fontSize = '0.85rem';
+      notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
+          <i class="fas fa-music" style="color: var(--napster-green);"></i>
+          <div style="font-weight: bold;">Napster</div>
+        </div>
+        <div>Connected to Napster network. 4,268,921 files (8.3 TB) available for sharing.</div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Remove after 5 seconds
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 1s ease';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 1000);
+      }, 5000);
+    }, 3000);
+  </script>
+</body>
+</html>
