@@ -5,51 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Napster Case Analysis | Interactive Legal Study</title>
   
-  <!-- Preload Font Awesome to ensure it loads properly -->
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Backup font awesome if CDN fails -->
-  <script>
-    // Check if Font Awesome loaded correctly
-    window.addEventListener('DOMContentLoaded', function() {
-      setTimeout(function() {
-        const testIcon = document.querySelector('.fa-gavel');
-        if (testIcon && window.getComputedStyle(testIcon, ':before').content === 'none') {
-          console.log('Font Awesome not loaded correctly. Loading backup...');
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = 'https://use.fontawesome.com/releases/v6.4.0/css/all.css';
-          document.head.appendChild(link);
-        }
-      }, 500);
-    });
-  </script>
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  
   <style>
+    /* Napster-inspired Color Palette */
     :root {
-      /* Color Palette */
-      --primary: #1a365d;
-      --primary-light: #2a4a7f;
-      --primary-dark: #102a4c;
-      --secondary: #f0b429;
-      --secondary-light: #f7c948;
-      --secondary-dark: #e09e0c;
-      --accent: #e85a4f;
-      --light: #edf2f7;
-      --dark: #2d3748;
-      --shadow: rgba(0, 0, 0, 0.1);
-      --bg-main: #f8fafc;
-      --bg-card: #ffffff;
-      --text-main: #1a202c;
-      --text-secondary: #4a5568;
-      --text-muted: #718096;
-      --border: #e2e8f0;
+      --napster-dark-blue: #0f1e35;      /* Main dark blue background */
+      --napster-medium-blue: #152848;    /* Secondary background */
+      --napster-light-blue: #4b6eaf;     /* Accents and highlights */
+      --napster-highlight: #4bd3ff;      /* Bright blue highlights */
+      --napster-green: #5fd38d;          /* Green accents */
+      --napster-text: #e0e0e0;           /* Main text color */
+      --napster-text-dim: #a0a0a0;       /* Secondary text */
+      --napster-border: #2a3c5a;         /* Borders */
+      --napster-panel: #1c2a45;          /* Panel backgrounds */
+      --napster-active: #2a508c;         /* Active/selected items */
+      --napster-shadow: rgba(0, 0, 0, 0.4);
+      --napster-scrollbar: #2a3c5a;
       
-      /* Typography */
-      --font-heading: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-body: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+      /* Keeping the functionality of light/dark mode with these variables */
+      --primary: var(--napster-light-blue);
+      --primary-light: var(--napster-highlight);
+      --primary-dark: var(--napster-dark-blue);
+      --secondary: var(--napster-green);
+      --secondary-light: #74e1a2;
+      --secondary-dark: #3ca565;
+      --accent: var(--napster-highlight);
+      --light: var(--napster-medium-blue);
+      --dark: var(--napster-dark-blue);
+      --shadow: var(--napster-shadow);
+      --bg-main: var(--napster-dark-blue);
+      --bg-card: var(--napster-panel);
+      --text-main: var(--napster-text);
+      --text-secondary: var(--napster-text-dim);
+      --text-muted: #708099;
+      --border: var(--napster-border);
+      
+      /* Windows 98/2000-style typography */
+      --font-heading: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+      --font-body: 'Tahoma', 'Arial', sans-serif;
       
       /* Spacing */
       --spacing-xs: 0.25rem;
@@ -61,16 +57,40 @@
       
       /* Sizing */
       --max-width: 1400px;
-      --sidebar-width: 280px;
-      --header-height: 70px;
+      --sidebar-width: 240px;
+      --header-height: 56px;
+      --footer-height: 32px;
       --timeline-height: 220px;
-      --border-radius: 8px;
-      --border-radius-lg: 12px;
+      --border-radius: 3px;
+      --border-radius-lg: 4px;
       
       /* Timing */
       --transition-fast: 150ms;
       --transition-med: 300ms;
       --transition-slow: 500ms;
+    }
+
+    /* Windows 98/2000 style scrollbars */
+    ::-webkit-scrollbar {
+      width: 16px;
+      height: 16px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--napster-dark-blue);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--napster-scrollbar);
+      border: 1px solid var(--napster-border);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--napster-active);
+    }
+    
+    ::-webkit-scrollbar-corner {
+      background: var(--napster-dark-blue);
     }
 
     /* Base Styles & Resets */
@@ -90,29 +110,31 @@
       font-family: var(--font-body);
       background-color: var(--bg-main);
       color: var(--text-main);
-      line-height: 1.6;
+      line-height: 1.5;
       min-height: 100vh;
       overflow-x: hidden;
       display: grid;
-      grid-template-rows: var(--header-height) 1fr;
+      grid-template-rows: var(--header-height) 1fr var(--footer-height);
       grid-template-columns: var(--sidebar-width) 1fr;
       grid-template-areas:
         "header header"
-        "sidebar main";
+        "sidebar main"
+        "footer footer";
     }
 
+    /* Napster-style early 2000s typography */
     h1, h2, h3, h4, h5, h6 {
       font-family: var(--font-heading);
-      font-weight: 700;
+      font-weight: 600;
       line-height: 1.2;
       margin-bottom: var(--spacing-md);
-      color: var(--primary);
+      color: var(--napster-highlight);
     }
     
-    h1 { font-size: 2.5rem; }
-    h2 { font-size: 2rem; margin-top: var(--spacing-xxl); }
-    h3 { font-size: 1.5rem; margin-top: var(--spacing-xl); color: var(--primary-light); }
-    h4 { font-size: 1.25rem; margin-top: var(--spacing-lg); color: var(--text-main); }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; margin-top: var(--spacing-xl); }
+    h3 { font-size: 1.3rem; margin-top: var(--spacing-lg); color: var(--napster-green); }
+    h4 { font-size: 1.1rem; margin-top: var(--spacing-md); color: var(--text-main); }
     
     p, ul, ol {
       margin-bottom: var(--spacing-md);
@@ -120,13 +142,14 @@
     }
     
     a {
-      color: var(--primary);
+      color: var(--napster-highlight);
       text-decoration: none;
       transition: color var(--transition-fast) ease;
     }
     
     a:hover {
-      color: var(--accent);
+      color: var(--secondary);
+      text-decoration: underline;
     }
     
     ul, ol {
@@ -141,7 +164,7 @@
       border-left: 4px solid var(--secondary);
       padding: var(--spacing-md) var(--spacing-xl);
       margin: var(--spacing-lg) 0;
-      background-color: rgba(240, 180, 41, 0.05);
+      background-color: rgba(94, 210, 138, 0.1);
       font-style: italic;
       color: var(--text-secondary);
       border-radius: var(--border-radius);
@@ -149,7 +172,7 @@
     
     strong {
       font-weight: 600;
-      color: var(--primary-dark);
+      color: var(--napster-green);
     }
     
     em {
@@ -159,9 +182,81 @@
     button {
       cursor: pointer;
       font-family: var(--font-body);
-      border: none;
+      border: 2px solid var(--napster-border);
+      border-radius: var(--border-radius);
       outline: none;
+      background-color: var(--napster-medium-blue);
+      color: var(--text-main);
+      padding: 3px 8px;
+      box-shadow: 1px 1px 3px var(--napster-shadow);
       transition: all var(--transition-fast) ease;
+    }
+    
+    button:hover {
+      background-color: var(--napster-active);
+    }
+    
+    button:active {
+      box-shadow: inset 1px 1px 3px var(--napster-shadow);
+      transform: translateY(1px);
+    }
+    
+    /* Napster Logo */
+    .napster-logo {
+      font-family: 'Arial Black', sans-serif;
+      font-weight: 900;
+      font-size: 1.4rem;
+      background: linear-gradient(to bottom, #5fd38d 0%, #3ca565 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      letter-spacing: -0.5px;
+    }
+    
+    /* Windows 98/2000 Style Window */
+    .win2k-window {
+      border: 2px solid var(--napster-border);
+      border-radius: var(--border-radius);
+      background-color: var(--napster-panel);
+      box-shadow: 2px 2px 5px var(--napster-shadow);
+    }
+    
+    .win2k-window-header {
+      background: linear-gradient(to right, var(--napster-light-blue), var(--napster-medium-blue));
+      padding: 3px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--napster-border);
+    }
+    
+    .win2k-window-title {
+      color: white;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    
+    .win2k-window-controls {
+      display: flex;
+      gap: 4px;
+    }
+    
+    .win2k-window-button {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--napster-border);
+      background-color: var(--napster-panel);
+      color: white;
+      font-size: 8px;
+      cursor: pointer;
+    }
+    
+    .win2k-window-content {
+      padding: var(--spacing-md);
     }
     
     /* Layout Components */
@@ -170,13 +265,49 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 var(--spacing-lg);
-      background-color: var(--primary);
+      padding: 0 var(--spacing-md);
+      background: linear-gradient(to bottom, var(--napster-medium-blue) 0%, var(--napster-dark-blue) 100%);
+      border-bottom: 1px solid var(--napster-light-blue);
       color: white;
-      box-shadow: 0 2px 10px var(--shadow);
+      box-shadow: 0 2px 5px var(--shadow);
       position: sticky;
       top: 0;
       z-index: 100;
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+    
+    .napster-search {
+      display: flex;
+      align-items: center;
+      background-color: var(--napster-dark-blue);
+      border: 1px solid var(--napster-border);
+      border-radius: var(--border-radius);
+      padding: 2px 8px;
+      width: 300px;
+    }
+    
+    .napster-search input {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      width: 100%;
+      padding: 4px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+    }
+    
+    .napster-search input:focus {
+      outline: none;
+    }
+    
+    .napster-search i {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
     }
     
     .logo {
@@ -200,31 +331,53 @@
     }
     
     .theme-toggle, .menu-toggle {
-      background: transparent;
+      background: var(--napster-medium-blue);
       color: white;
-      font-size: 1.2rem;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      font-size: 1rem;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--border-radius);
       display: flex;
       align-items: center;
       justify-content: center;
+      border: 1px solid var(--napster-border);
     }
     
     .theme-toggle:hover, .menu-toggle:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: var(--napster-active);
     }
     
     .menu-toggle {
       display: none;
     }
     
+    .napster-menu {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+    
+    .napster-menu-item {
+      padding: 0 var(--spacing-sm);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      color: var(--text-main);
+      font-size: 0.8rem;
+      border-right: 1px solid var(--napster-border);
+      cursor: pointer;
+    }
+    
+    .napster-menu-item:hover {
+      background-color: var(--napster-medium-blue);
+    }
+    
     .sidebar {
       grid-area: sidebar;
-      background-color: white;
-      border-right: 1px solid var(--border);
-      padding: var(--spacing-lg) 0;
-      height: calc(100vh - var(--header-height));
+      background-color: var(--napster-panel);
+      border-right: 1px solid var(--napster-border);
+      padding: var(--spacing-sm) 0;
+      height: calc(100vh - var(--header-height) - var(--footer-height));
       position: sticky;
       top: var(--header-height);
       overflow-y: auto;
@@ -233,16 +386,19 @@
     }
     
     .sidebar-section {
-      margin-bottom: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
     }
     
     .sidebar-heading {
-      padding: 0 var(--spacing-lg);
-      font-size: 0.85rem;
+      padding: 3px var(--spacing-md);
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: var(--text-muted);
+      color: var(--napster-highlight);
       margin-bottom: var(--spacing-sm);
+      background-color: var(--napster-dark-blue);
+      border-top: 1px solid var(--napster-border);
+      border-bottom: 1px solid var(--napster-border);
     }
     
     .nav-items {
@@ -257,22 +413,24 @@
     .nav-link {
       display: flex;
       align-items: center;
-      padding: var(--spacing-sm) var(--spacing-lg);
+      padding: 4px var(--spacing-md);
       color: var(--text-secondary);
-      font-weight: 500;
+      font-weight: 400;
+      font-size: 0.9rem;
       transition: background-color var(--transition-fast) ease;
-      border-left: 3px solid transparent;
+      border-left: 2px solid transparent;
     }
     
     .nav-link:hover {
-      background-color: rgba(0, 0, 0, 0.02);
-      color: var(--primary);
+      background-color: var(--napster-medium-blue);
+      color: var(--napster-highlight);
+      text-decoration: none;
     }
     
     .nav-link.active {
       border-left-color: var(--secondary);
-      background-color: rgba(0, 0, 0, 0.02);
-      color: var(--primary);
+      background-color: var(--napster-active);
+      color: white;
       font-weight: 600;
     }
     
@@ -280,7 +438,7 @@
       margin-right: var(--spacing-sm);
       width: 20px;
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
     }
     
@@ -290,10 +448,35 @@
     
     main {
       grid-area: main;
-      padding: var(--spacing-xl);
+      padding: var(--spacing-lg);
       max-width: 1200px;
       margin: 0 auto;
       width: 100%;
+      overflow-y: auto;
+    }
+    
+    footer {
+      grid-area: footer;
+      background: linear-gradient(to bottom, var(--napster-dark-blue) 0%, var(--napster-medium-blue) 100%);
+      border-top: 1px solid var(--napster-border);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--spacing-md);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    
+    footer .status {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+    
+    footer .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--napster-green);
     }
     
     .content-wrapper {
@@ -302,14 +485,40 @@
       margin: 0 auto;
     }
     
-    /* Timeline Component */
+    /* Napster-style progress indicator */
+    .progress-indicator {
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      height: 3px;
+      background-color: var(--secondary);
+      width: 0%;
+      z-index: 95;
+      transition: width var(--transition-fast) ease;
+    }
+    
+    /* Napster-style section cards */
+    .section-card {
+      background-color: var(--napster-panel);
+      border: 1px solid var(--napster-border);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      transition: box-shadow var(--transition-med) ease;
+    }
+    
+    .section-card:hover {
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Timeline Component - Napster style */
     .timeline-wrapper {
       width: 100%;
-      background: white;
-      border-radius: var(--border-radius-lg);
-      box-shadow: 0 2px 10px var(--shadow);
-      padding: var(--spacing-lg);
-      margin-bottom: var(--spacing-xxl);
+      background: var(--napster-panel);
+      border: 1px solid var(--napster-border);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
       position: relative;
       overflow: hidden;
     }
@@ -336,7 +545,7 @@
       right: 0;
       top: calc(50% - 1px);
       height: 2px;
-      background-color: var(--border);
+      background-color: var(--napster-border);
       z-index: 1;
     }
     
@@ -344,9 +553,10 @@
       min-width: 280px;
       max-width: 280px;
       border-radius: var(--border-radius);
-      padding: var(--spacing-lg);
-      background-color: var(--bg-card);
-      box-shadow: 0 2px 10px var(--shadow);
+      padding: var(--spacing-md);
+      background-color: var(--napster-medium-blue);
+      border: 1px solid var(--napster-border);
+      box-shadow: 2px 2px 5px var(--napster-shadow);
       position: relative;
       z-index: 2;
       cursor: pointer;
@@ -356,19 +566,20 @@
     
     .timeline-event:hover {
       transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+      background-color: var(--napster-active);
     }
     
     .timeline-event::before {
       content: '';
       position: absolute;
-      width: 16px;
-      height: 16px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background-color: var(--secondary);
       bottom: -28px;
-      left: calc(50% - 8px);
-      box-shadow: 0 0 0 4px rgba(240, 180, 41, 0.2);
+      left: calc(50% - 6px);
+      box-shadow: 0 0 0 3px rgba(95, 211, 141, 0.2);
     }
     
     .timeline-event::after {
@@ -376,49 +587,50 @@
       position: absolute;
       width: 2px;
       height: 20px;
-      background-color: var(--border);
+      background-color: var(--napster-border);
       bottom: -20px;
       left: calc(50% - 1px);
     }
     
     .timeline-date {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--secondary);
       margin-bottom: var(--spacing-xs);
     }
     
     .timeline-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       margin-bottom: var(--spacing-sm);
-      color: var(--primary);
+      color: var(--napster-highlight);
     }
     
     .timeline-content {
       color: var(--text-secondary);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
     
     .timeline-nav {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--border-radius);
+      background-color: var(--napster-medium-blue);
+      border: 1px solid var(--napster-border);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--primary);
-      box-shadow: 0 2px 10px var(--shadow);
+      color: var(--text-main);
+      box-shadow: 1px 1px 3px var(--napster-shadow);
       z-index: 10;
       cursor: pointer;
       transition: background-color var(--transition-fast) ease, color var(--transition-fast) ease;
     }
     
     .timeline-nav:hover {
-      background-color: var(--primary);
+      background-color: var(--napster-active);
       color: white;
     }
     
@@ -430,29 +642,15 @@
       right: var(--spacing-sm);
     }
     
-    /* Section Components */
-    .section-card {
-      background-color: white;
-      border-radius: var(--border-radius-lg);
-      box-shadow: 0 2px 10px var(--shadow);
-      padding: var(--spacing-xl);
-      margin-bottom: var(--spacing-xl);
-      transition: transform var(--transition-med) ease, box-shadow var(--transition-med) ease;
-    }
-    
-    .section-card:hover {
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Tooltip Component */
+    /* Napster-style tooltip */
     .tooltip-container {
       position: relative;
       display: inline;
     }
     
     .tooltip-trigger {
-      color: var(--primary);
-      border-bottom: 1px dashed var(--primary);
+      color: var(--napster-highlight);
+      border-bottom: 1px dashed var(--napster-highlight);
       cursor: pointer;
       position: relative;
       z-index: 1;
@@ -462,9 +660,10 @@
       position: absolute;
       z-index: 1000;
       width: 320px;
-      background-color: white;
+      background-color: var(--napster-medium-blue);
+      border: 1px solid var(--napster-border);
       border-radius: var(--border-radius);
-      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
       padding: var(--spacing-md);
       opacity: 0;
       visibility: hidden;
@@ -487,15 +686,16 @@
       position: absolute;
       width: 12px;
       height: 12px;
-      background-color: white;
-      bottom: -6px;
+      background-color: var(--napster-medium-blue);
+      border-right: 1px solid var(--napster-border);
+      border-bottom: 1px solid var(--napster-border);
+      bottom: -7px;
       left: 50%;
       transform: translateX(-50%) rotate(45deg);
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
     }
     
     .tooltip-title {
-      color: var(--primary);
+      color: var(--napster-highlight);
       font-weight: 600;
       margin-bottom: var(--spacing-xs);
       font-size: 1rem;
@@ -507,42 +707,45 @@
       line-height: 1.5;
     }
     
-    /* Argument Battle Component */
+    /* Argument Battle Component - Napster style */
     .argument-battle {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--spacing-lg);
-      margin: var(--spacing-xl) 0;
+      gap: var(--spacing-md);
+      margin: var(--spacing-lg) 0;
     }
     
     .argument-side {
-      background-color: white;
-      border-radius: var(--border-radius-lg);
-      box-shadow: 0 2px 10px var(--shadow);
+      background-color: var(--napster-medium-blue);
+      border: 1px solid var(--napster-border);
+      border-radius: var(--border-radius);
       overflow: hidden;
+      box-shadow: 2px 2px 5px var(--napster-shadow);
     }
     
     .argument-header {
-      padding: var(--spacing-md) var(--spacing-lg);
-      background-color: var(--primary);
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: linear-gradient(to bottom, var(--napster-light-blue) 0%, var(--napster-medium-blue) 100%);
       color: white;
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: var(--spacing-sm);
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--napster-border);
     }
     
     .napster-side .argument-header {
-      background-color: var(--secondary);
-      color: var(--primary-dark);
+      background: linear-gradient(to bottom, var(--napster-green) 0%, var(--secondary-dark) 100%);
+      color: var(--napster-dark-blue);
     }
     
     .argument-header i {
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
     
     .argument-content {
-      padding: var(--spacing-lg);
+      padding: var(--spacing-md);
       height: 0;
       opacity: 0;
       overflow: hidden;
@@ -552,7 +755,7 @@
     .argument-content.active {
       height: auto;
       opacity: 1;
-      padding: var(--spacing-lg);
+      padding: var(--spacing-md);
     }
     
     .argument-point {
@@ -563,8 +766,9 @@
     }
     
     .argument-point i {
-      color: var(--primary);
+      color: var(--napster-light-blue);
       margin-top: 4px;
+      font-size: 0.9rem;
     }
     
     .napster-side .argument-point i {
@@ -573,67 +777,78 @@
     
     .argument-point-text {
       flex: 1;
+      font-size: 0.9rem;
     }
     
     .argument-toggle {
       width: 100%;
-      padding: var(--spacing-sm) var(--spacing-md);
+      padding: var(--spacing-xs) var(--spacing-md);
       text-align: center;
-      background-color: var(--light);
-      color: var(--primary);
+      background-color: var(--napster-dark-blue);
+      color: var(--text-main);
       font-weight: 600;
-      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--napster-border);
+      border-radius: 0;
     }
     
     .argument-toggle:hover {
-      background-color: var(--primary-light);
+      background-color: var(--napster-active);
       color: white;
     }
     
     .napster-side .argument-toggle:hover {
       background-color: var(--secondary-light);
-      color: var(--primary-dark);
+      color: var(--napster-dark-blue);
     }
     
-    /* Impact & Legacy Component */
+    /* Impact & Legacy Component - Napster style */
     .impact-wrapper {
-      margin: var(--spacing-xl) 0;
+      margin: var(--spacing-lg) 0;
     }
     
     .impact-tabs {
       display: flex;
       overflow-x: auto;
-      gap: var(--spacing-sm);
-      margin-bottom: var(--spacing-lg);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: var(--spacing-sm);
+      gap: 1px;
+      margin-bottom: var(--spacing-md);
+      background-color: var(--napster-dark-blue);
+      border: 1px solid var(--napster-border);
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
     }
     
     .impact-tab {
-      padding: var(--spacing-sm) var(--spacing-md);
-      background-color: var(--light);
+      padding: var(--spacing-xs) var(--spacing-md);
+      background-color: var(--napster-medium-blue);
       color: var(--text-secondary);
-      border-radius: var(--border-radius);
-      font-weight: 500;
+      font-weight: 400;
+      font-size: 0.85rem;
       white-space: nowrap;
+      border-right: 1px solid var(--napster-border);
       transition: background-color var(--transition-fast) ease, color var(--transition-fast) ease;
     }
     
+    .impact-tab:first-child {
+      border-radius: 2px 0 0 0;
+    }
+    
     .impact-tab:hover {
-      background-color: rgba(26, 54, 93, 0.1);
-      color: var(--primary);
+      background-color: var(--napster-active);
+      color: var(--text-main);
     }
     
     .impact-tab.active {
-      background-color: var(--primary);
+      background: linear-gradient(to bottom, var(--napster-light-blue) 0%, var(--napster-active) 100%);
       color: white;
+      font-weight: 600;
     }
     
     .impact-content {
-      background-color: white;
-      border-radius: var(--border-radius-lg);
-      box-shadow: 0 2px 10px var(--shadow);
-      padding: var(--spacing-xl);
+      background-color: var(--napster-panel);
+      border: 1px solid var(--napster-border);
+      border-top: none;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+      padding: var(--spacing-lg);
       display: none;
       animation: fadeIn var(--transition-med) ease;
     }
@@ -650,51 +865,42 @@
     }
     
     .impact-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: rgba(26, 54, 93, 0.1);
-      color: var(--primary);
+      width: 48px;
+      height: 48px;
+      border-radius: 4px;
+      background-color: var(--napster-medium-blue);
+      border: 1px solid var(--napster-border);
+      color: var(--napster-highlight);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
     }
     
     .impact-title {
-      color: var(--primary);
-      font-size: 1.5rem;
+      color: var(--napster-highlight);
+      font-size: 1.2rem;
       margin-bottom: 0;
     }
     
-    /* Progress Indicator */
-    .progress-indicator {
-      position: fixed;
-      top: var(--header-height);
-      left: 0;
-      height: 3px;
-      background-color: var(--secondary);
-      width: 0%;
-      z-index: 95;
-      transition: width var(--transition-fast) ease;
-    }
-    
-    /* Audio Player */
+    /* Audio Player - Napster inspired */
     .audio-player {
       position: fixed;
-      bottom: 0;
+      bottom: var(--footer-height);
       left: 0;
       right: 0;
-      background-color: var(--primary-dark);
+      background: linear-gradient(to bottom, var(--napster-medium-blue) 0%, var(--napster-dark-blue) 100%);
+      border-top: 1px solid var(--napster-border);
       color: white;
-      padding: var(--spacing-sm) var(--spacing-lg);
+      padding: var(--spacing-xs) var(--spacing-md);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: var(--spacing-md);
       z-index: 100;
-      box-shadow: 0 -2px 10px var(--shadow);
+      box-shadow: 0 -2px 5px var(--shadow);
       transition: transform var(--transition-med) ease;
+      height: 64px;
     }
     
     .audio-player.minimized {
@@ -702,21 +908,22 @@
     }
     
     .audio-toggle {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: var(--secondary);
-      color: var(--primary-dark);
+      width: 36px;
+      height: 36px;
+      border-radius: 3px;
+      background: linear-gradient(to bottom, var(--napster-medium-blue) 0%, var(--napster-dark-blue) 100%);
+      border: 1px solid var(--napster-light-blue);
+      color: var(--napster-highlight);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1rem;
       cursor: pointer;
-      transition: background-color var(--transition-fast) ease;
     }
     
     .audio-toggle:hover {
-      background-color: var(--secondary-light);
+      background: linear-gradient(to bottom, var(--napster-light-blue) 0%, var(--napster-medium-blue) 100%);
+      color: white;
     }
     
     .audio-info {
@@ -727,6 +934,7 @@
     .audio-title {
       font-weight: 600;
       margin-bottom: 2px;
+      color: var(--napster-highlight);
     }
     
     .audio-subtitle {
@@ -734,32 +942,64 @@
       font-size: 0.8rem;
     }
     
+    .audio-progress {
+      height: 4px;
+      width: 100%;
+      background-color: var(--napster-dark-blue);
+      border: 1px solid var(--napster-border);
+      border-radius: 2px;
+      margin-top: 4px;
+      position: relative;
+    }
+    
+    .audio-progress-bar {
+      height: 100%;
+      width: 30%;
+      background-color: var(--napster-highlight);
+      border-radius: 2px;
+    }
+    
+    .audio-progress-handle {
+      width: 8px;
+      height: 12px;
+      background-color: var(--napster-highlight);
+      border: 1px solid var(--napster-light-blue);
+      position: absolute;
+      top: -5px;
+      left: 30%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+    
     .audio-show-toggle {
       position: fixed;
-      bottom: var(--spacing-md);
+      bottom: calc(var(--footer-height) + var(--spacing-sm));
       right: var(--spacing-md);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background-color: var(--primary);
+      width: 36px;
+      height: 36px;
+      border-radius: 3px;
+      background: linear-gradient(to bottom, var(--napster-green) 0%, var(--secondary-dark) 100%);
+      border: 1px solid var(--secondary-light);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1rem;
       cursor: pointer;
-      box-shadow: 0 2px 10px var(--shadow);
       z-index: 101;
-      transition: background-color var(--transition-fast) ease, transform var(--transition-fast) ease;
+      transition: transform var(--transition-fast) ease;
+      box-shadow: 2px 2px 5px var(--napster-shadow);
     }
     
     .audio-show-toggle:hover {
-      background-color: var(--primary-light);
       transform: scale(1.05);
     }
     
-    .audio-show-toggle.hidden {
-      display: none;
+    .audio-time {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-left: auto;
+      margin-right: var(--spacing-md);
     }
     
     /* Animations */
@@ -790,19 +1030,89 @@
       animation: slideInLeft var(--transition-med) ease;
     }
     
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: var(--spacing-md);
+    }
+    
+    .modal-content {
+      background-color: var(--napster-medium-blue);
+      border: 2px solid var(--napster-border);
+      border-radius: var(--border-radius);
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-header {
+      background: linear-gradient(to right, var(--napster-light-blue), var(--napster-medium-blue));
+      padding: 6px var(--spacing-md);
+      border-bottom: 1px solid var(--napster-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .modal-title {
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    
+    .modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.2rem;
+      color: white;
+      cursor: pointer;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3px;
+      font-family: 'Tahoma', sans-serif;
+    }
+    
+    .modal-close:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .modal-body {
+      padding: var(--spacing-lg);
+    }
+    
     /* Responsive Styles */
     @media (max-width: 1024px) {
       :root {
-        --sidebar-width: 240px;
+        --sidebar-width: 220px;
       }
       
-      h1 { font-size: 2rem; }
-      h2 { font-size: 1.75rem; }
-      h3 { font-size: 1.35rem; }
+      h1 { font-size: 1.6rem; }
+      h2 { font-size: 1.4rem; }
+      h3 { font-size: 1.2rem; }
       
       .argument-battle {
         grid-template-columns: 1fr;
         gap: var(--spacing-md);
+      }
+      
+      .napster-search {
+        width: 200px;
       }
     }
     
@@ -810,7 +1120,8 @@
       body {
         grid-template-areas:
           "header header"
-          "main main";
+          "main main"
+          "footer footer";
       }
       
       .sidebar {
@@ -831,20 +1142,28 @@
         display: flex;
       }
       
+      .napster-menu {
+        display: none;
+      }
+      
       main {
-        padding: var(--spacing-lg) var(--spacing-md);
+        padding: var(--spacing-md);
+      }
+      
+      .napster-search {
+        display: none;
       }
     }
     
     @media (max-width: 480px) {
       :root {
+        --spacing-lg: 1rem;
         --spacing-xl: 1.5rem;
-        --spacing-xxl: 2rem;
       }
       
-      h1 { font-size: 1.75rem; }
-      h2 { font-size: 1.5rem; }
-      h3 { font-size: 1.25rem; }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.3rem; }
+      h3 { font-size: 1.1rem; }
       
       .timeline-event {
         min-width: 240px;
@@ -852,7 +1171,15 @@
       }
       
       .tooltip-content {
-        width: 280px;
+        width: 260px;
+      }
+      
+      .audio-player {
+        padding: var(--spacing-xs);
+      }
+      
+      .audio-time {
+        display: none;
       }
     }
   </style>
@@ -861,12 +1188,24 @@
   <div class="progress-indicator" id="progress-bar"></div>
   
   <header>
-    <div class="logo">
-      <i class="fas fa-gavel"></i>
-      <span>Napster Case Analysis</span>
+    <div class="header-left">
+      <div class="logo">
+        <i class="fas fa-music"></i>
+        <span class="napster-logo">NAPSTER</span>
+      </div>
+      <div class="napster-menu">
+        <div class="napster-menu-item">File</div>
+        <div class="napster-menu-item">Edit</div>
+        <div class="napster-menu-item">View</div>
+        <div class="napster-menu-item">Help</div>
+      </div>
+    </div>
+    <div class="napster-search">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search for legal precedents..." disabled>
     </div>
     <div class="header-controls">
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle interface mode">
         <i class="fas fa-moon"></i>
       </button>
       <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu">
@@ -952,16 +1291,49 @@
         </li>
       </ul>
     </div>
+    
+    <div class="sidebar-section">
+      <h3 class="sidebar-heading">Online Users (3)</h3>
+      <ul class="nav-items">
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-user"></i> shawn_fanning
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-user"></i> lars_ulrich
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-user"></i> sean_parker
+          </a>
+        </li>
+      </ul>
+    </div>
   </aside>
   
   <main>
     <section id="introduction" class="content-wrapper">
-      <h1 class="animate-fadeIn">A&amp;M Records, Inc. v. Napster, Inc.</h1>
-      <h3 class="animate-fadeIn">239 F.3d 1004 (9th Cir. 2001)</h3>
-      
-      <p class="animate-fadeIn">
-        This interactive presentation offers a comprehensive legal analysis of one of the most important copyright cases in the digital era, examining how the courts grappled with emerging peer-to-peer technology and its implications for copyright law.
-      </p>
+      <div class="win2k-window">
+        <div class="win2k-window-header">
+          <div class="win2k-window-title">Napster Legal Analysis - Main Window</div>
+          <div class="win2k-window-controls">
+            <div class="win2k-window-button">_</div>
+            <div class="win2k-window-button">□</div>
+            <div class="win2k-window-button">×</div>
+          </div>
+        </div>
+        <div class="win2k-window-content">
+          <h1 class="animate-fadeIn">A&amp;M Records, Inc. v. Napster, Inc.</h1>
+          <h3 class="animate-fadeIn">239 F.3d 1004 (9th Cir. 2001)</h3>
+          
+          <p class="animate-fadeIn">
+            This interactive presentation offers a comprehensive legal analysis of one of the most important copyright cases in the digital era, examining how the courts grappled with emerging peer-to-peer technology and its implications for copyright law.
+          </p>
+        </div>
+      </div>
       
       <div class="timeline-wrapper animate-fadeIn">
         <h2>Key Case Timeline</h2>
@@ -1555,6 +1927,14 @@
     </div>
   </main>
   
+  <footer>
+    <div class="status">
+      <div class="status-indicator"></div>
+      <span>Connected</span>
+    </div>
+    <div style="margin-left: auto;">© 2025 Napster Case Analysis</div>
+  </footer>
+  
   <!-- Audio Player -->
   <div class="audio-player minimized" id="audio-player">
     <button class="audio-toggle" id="audio-toggle">
@@ -1563,7 +1943,12 @@
     <div class="audio-info">
       <div class="audio-title">Metallica - I Disappear (Napster Leaked Demo)</div>
       <div class="audio-subtitle">The infamous leak that sparked Metallica's lawsuit against Napster</div>
+      <div class="audio-progress">
+        <div class="audio-progress-bar"></div>
+        <div class="audio-progress-handle"></div>
+      </div>
     </div>
+    <div class="audio-time">3:03 / 4:28</div>
     <audio id="background-music" loop>
       <source src="Metallica - I Disappear (Napster Leaked Demo) [e9q-92qaiJ0].mp3" type="audio/mp3">
       Your browser does not support the audio element.
@@ -1667,188 +2052,4 @@
         const modal = document.createElement('div');
         modal.classList.add('modal-overlay');
         modal.innerHTML = `
-          <div class="modal-content animate-fadeIn">
-            <button class="modal-close">&times;</button>
-            <div class="modal-body">
-              ${tooltipContent}
-            </div>
-          </div>
-        `;
-        
-        document.body.appendChild(modal);
-        
-        modal.querySelector('.modal-close').addEventListener('click', () => {
-          document.body.removeChild(modal);
-        });
-        
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            document.body.removeChild(modal);
-          }
-        });
-      });
-    });
-    
-    // Audio Player Controls
-    const audioPlayer = document.getElementById('audio-player');
-    const audioShowToggle = document.getElementById('audio-show-toggle');
-    const audioToggle = document.getElementById('audio-toggle');
-    const audioElement = document.getElementById('background-music');
-    const audioToggleIcon = audioToggle.querySelector('i');
-    
-    // Auto-play music when page loads
-    window.addEventListener('load', () => {
-      // Try to play - browsers may block this without user interaction
-      audioElement.play().catch(e => {
-        console.log("Auto-play prevented by browser. User interaction required.");
-        // Show the player toggle since auto-play failed
-        audioPlayer.classList.remove('minimized');
-      });
-    });
-    
-    // Toggle audio show/hide
-    audioShowToggle.addEventListener('click', () => {
-      audioPlayer.classList.toggle('minimized');
-      
-      if (audioPlayer.classList.contains('minimized')) {
-        audioShowToggle.querySelector('i').classList.remove('fa-times');
-        audioShowToggle.querySelector('i').classList.add('fa-music');
-      } else {
-        audioShowToggle.querySelector('i').classList.remove('fa-music');
-        audioShowToggle.querySelector('i').classList.add('fa-times');
-      }
-    });
-    
-    // Play/pause toggle
-    audioToggle.addEventListener('click', () => {
-      if (audioElement.paused) {
-        audioElement.play();
-        audioToggleIcon.classList.remove('fa-play');
-        audioToggleIcon.classList.add('fa-pause');
-      } else {
-        audioElement.pause();
-        audioToggleIcon.classList.remove('fa-pause');
-        audioToggleIcon.classList.add('fa-play');
-      }
-    });
-    
-    // Add to head after page load for modal styles
-    window.addEventListener('load', () => {
-      const style = document.createElement('style');
-      style.textContent = `
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: rgba(0, 0, 0, 0.7);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          padding: var(--spacing-md);
-        }
-        
-        .modal-content {
-          background-color: white;
-          border-radius: var(--border-radius-lg);
-          width: 100%;
-          max-width: 500px;
-          position: relative;
-          max-height: 90vh;
-          overflow-y: auto;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-        
-        .modal-close {
-          position: absolute;
-          top: var(--spacing-sm);
-          right: var(--spacing-sm);
-          background: transparent;
-          border: none;
-          font-size: 1.5rem;
-          color: var(--text-muted);
-          cursor: pointer;
-          z-index: 2;
-        }
-        
-        .modal-close:hover {
-          color: var(--primary);
-        }
-        
-        .modal-body {
-          padding: var(--spacing-xl);
-        }
-      `;
-      document.head.appendChild(style);
-    });
-    
-    // Theme Toggle
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = themeToggle.querySelector('i');
-    let darkMode = false;
-    
-    themeToggle.addEventListener('click', () => {
-      darkMode = !darkMode;
-      
-      if (darkMode) {
-        document.documentElement.style.setProperty('--primary', '#61a5c2');
-        document.documentElement.style.setProperty('--primary-light', '#89c2d9');
-        document.documentElement.style.setProperty('--primary-dark', '#468faf');
-        document.documentElement.style.setProperty('--secondary', '#ffbe0b');
-        document.documentElement.style.setProperty('--secondary-light', '#ffd166');
-        document.documentElement.style.setProperty('--secondary-dark', '#e09f3e');
-        document.documentElement.style.setProperty('--accent', '#ef476f');
-        document.documentElement.style.setProperty('--bg-main', '#1a1a2e');
-        document.documentElement.style.setProperty('--bg-card', '#16213e');
-        document.documentElement.style.setProperty('--text-main', '#e9ecef');
-        document.documentElement.style.setProperty('--text-secondary', '#adb5bd');
-        document.documentElement.style.setProperty('--text-muted', '#6c757d');
-        document.documentElement.style.setProperty('--border', '#0f3460');
-        document.documentElement.style.setProperty('--light', '#0f3460');
-        document.documentElement.style.setProperty('--shadow', 'rgba(0, 0, 0, 0.5)');
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-      } else {
-        document.documentElement.style.setProperty('--primary', '#1a365d');
-        document.documentElement.style.setProperty('--primary-light', '#2a4a7f');
-        document.documentElement.style.setProperty('--primary-dark', '#102a4c');
-        document.documentElement.style.setProperty('--secondary', '#f0b429');
-        document.documentElement.style.setProperty('--secondary-light', '#f7c948');
-        document.documentElement.style.setProperty('--secondary-dark', '#e09e0c');
-        document.documentElement.style.setProperty('--accent', '#e85a4f');
-        document.documentElement.style.setProperty('--bg-main', '#f8fafc');
-        document.documentElement.style.setProperty('--bg-card', '#ffffff');
-        document.documentElement.style.setProperty('--text-main', '#1a202c');
-        document.documentElement.style.setProperty('--text-secondary', '#4a5568');
-        document.documentElement.style.setProperty('--text-muted', '#718096');
-        document.documentElement.style.setProperty('--border', '#e2e8f0');
-        document.documentElement.style.setProperty('--light', '#edf2f7');
-        document.documentElement.style.setProperty('--shadow', 'rgba(0, 0, 0, 0.1)');
-        themeIcon.classList.remove('fa-sun');
-        themeIcon.classList.add('fa-moon');
-      }
-    });
-    
-    // Show animation when elements come into viewport
-    const animateOnScroll = () => {
-      const elements = document.querySelectorAll('.section-card');
-      
-      elements.forEach(element => {
-        const elementPosition = element.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-        
-        if (elementPosition < windowHeight - 100) {
-          if (!element.classList.contains('animate-fadeIn')) {
-            element.classList.add('animate-fadeIn');
-          }
-        }
-      });
-    };
-    
-    window.addEventListener('scroll', animateOnScroll);
-    window.addEventListener('load', animateOnScroll);
-  </script>
-</body>
-</html>
+          <div class="modal
